@@ -1,0 +1,263 @@
+<beast>
+    <!-- omitting everything above the tree model -->
+
+
+    <!-- Generate a tree model                                                   -->
+    <treeModel id="treeModel">
+        <tree idref="startingTree"/>
+        <rootHeight>
+            <parameter id="treeModel.rootHeight"/>
+        </rootHeight>
+        <nodeHeights internalNodes="true">
+            <parameter id="treeModel.internalNodeHeights"/>
+        </nodeHeights>
+        <nodeHeights internalNodes="true" rootNode="true">
+            <parameter id="treeModel.allInternalNodeHeights"/>
+        </nodeHeights>
+    </treeModel>
+
+    <!-- Statistic for sum of the branch lengths of the tree (tree length)       -->
+    <treeLengthStatistic id="treeLength">
+        <treeModel idref="treeModel"/>
+    </treeLengthStatistic>
+
+    <!-- Statistic for time of most recent common ancestor of tree               -->
+    <tmrcaStatistic id="age(root)" absolute="true">
+        <treeModel idref="treeModel"/>
+    </tmrcaStatistic>
+
+
+    <!-- Generate a coalescent likelihood                                        -->
+    <coalescentLikelihood id="coalescent">
+        <model>
+            <exponentialGrowth idref="exponential"/>
+        </model>
+        <populationTree>
+            <treeModel idref="treeModel"/>
+        </populationTree>
+    </coalescentLikelihood>
+
+
+    <!-- The uncorrelated relaxed clock (Drummond, Ho, Phillips & Rambaut (2006) PLoS Biology 4, e88 )-->
+    <discretizedBranchRates id="branchRates">
+        <treeModel idref="treeModel"/>
+        <distribution>
+            <logNormalDistributionModel meanInRealSpace="true">
+                <mean>
+                    <parameter id="ucld.mean" value="0.0013" lower="0.0"/>
+                </mean>
+                <stdev>
+                    <parameter id="ucld.stdev" value="1.0E-4" lower="0.0"/>
+                </stdev>
+            </logNormalDistributionModel>
+        </distribution>
+        <rateCategories>
+            <parameter id="branchRates.categories"/>
+        </rateCategories>
+    </discretizedBranchRates>
+
+    <rateStatistic id="meanRate" name="meanRate" mode="mean" internal="true" external="true">
+        <treeModel idref="treeModel"/>
+        <discretizedBranchRates idref="branchRates"/>
+    </rateStatistic>
+
+    <rateStatistic id="coefficientOfVariation" name="coefficientOfVariation" mode="coefficientOfVariation"
+                   internal="true"
+                   external="true">
+        <treeModel idref="treeModel"/>
+        <discretizedBranchRates idref="branchRates"/>
+    </rateStatistic>
+
+    <rateCovarianceStatistic id="covariance" name="covariance">
+        <treeModel idref="treeModel"/>
+        <discretizedBranchRates idref="branchRates"/>
+    </rateCovarianceStatistic>
+
+
+    <!-- The HKY substitution model (Hasegawa, Kishino & Yano, 1985)             -->
+    <HKYModel id="hky">
+        <frequencies>
+            <frequencyModel dataType="nucleotide">
+                <frequencies>
+                    <parameter id="frequencies" value="0.25 0.25 0.25 0.25"/>
+                </frequencies>
+            </frequencyModel>
+        </frequencies>
+        <kappa>
+            <parameter id="kappa" value="2.0" lower="0.0"/>
+        </kappa>
+    </HKYModel>
+
+    <!-- site model                                                              -->
+    <siteModel id="siteModel">
+        <substitutionModel>
+            <HKYModel idref="hky"/>
+        </substitutionModel>
+    </siteModel>
+
+    <!--                                                                         -->
+    <statistic id="mu" name="mu">
+        <siteModel idref="siteModel"/>
+    </statistic>
+
+
+    <!-- Likelihood for tree given sequence data                                 -->
+    <treeDataLikelihood id="treeLikelihood" useAmbiguities="false">
+        <partition>
+            <patterns idref="patterns"/>
+            <siteModel idref="siteModel"/>
+        </partition>
+        <treeModel idref="treeModel"/>
+        <discretizedBranchRates idref="branchRates"/>
+    </treeDataLikelihood>
+
+
+    <!-- Define operators                                                        -->
+    <operators id="operators" optimizationSchedule="default">
+        <scaleOperator scaleFactor="0.75" weight="1">
+            <parameter idref="kappa"/>
+        </scaleOperator>
+        <deltaExchange delta="0.01" weight="1">
+            <parameter idref="frequencies"/>
+        </deltaExchange>
+        <scaleOperator scaleFactor="0.75" weight="3">
+            <parameter idref="ucld.mean"/>
+        </scaleOperator>
+        <scaleOperator scaleFactor="0.75" weight="3">
+            <parameter idref="ucld.stdev"/>
+        </scaleOperator>
+        <upDownOperator scaleFactor="0.75" weight="3">
+            <up>
+                <parameter idref="treeModel.allInternalNodeHeights"/>
+            </up>
+            <down>
+                <parameter idref="ucld.mean"/>
+            </down>
+        </upDownOperator>
+        <swapOperator size="1" weight="10" autoOptimize="false">
+            <parameter idref="branchRates.categories"/>
+        </swapOperator>
+        <uniformIntegerOperator weight="10">
+            <parameter idref="branchRates.categories"/>
+        </uniformIntegerOperator>
+        <subtreeSlide size="1.0" gaussian="true" weight="30">
+            <treeModel idref="treeModel"/>
+        </subtreeSlide>
+        <narrowExchange weight="30">
+            <treeModel idref="treeModel"/>
+        </narrowExchange>
+        <wideExchange weight="3">
+            <treeModel idref="treeModel"/>
+        </wideExchange>
+        <wilsonBalding weight="3">
+            <treeModel idref="treeModel"/>
+        </wilsonBalding>
+        <scaleOperator scaleFactor="0.75" weight="3">
+            <parameter idref="treeModel.rootHeight"/>
+        </scaleOperator>
+        <uniformOperator weight="30">
+            <parameter idref="treeModel.internalNodeHeights"/>
+        </uniformOperator>
+        <scaleOperator scaleFactor="0.75" weight="3">
+            <parameter idref="exponential.popSize"/>
+        </scaleOperator>
+        <randomWalkOperator windowSize="1.0" weight="3">
+            <parameter idref="exponential.growthRate"/>
+        </randomWalkOperator>
+    </operators>
+
+
+    <!-- Define MCMC                                                             -->
+    <mcmc id="mcmc" chainLength="40000000" autoOptimize="true"
+          operatorAnalysis="2021-03-25_relaxed_exponential.xml.ops">
+        <joint id="joint">
+            <prior id="prior">
+                <logNormalPrior mu="1.0" sigma="1.25" offset="0.0">
+                    <parameter idref="kappa"/>
+                </logNormalPrior>
+                <dirichletPrior alpha="1.0" sumsTo="1.0">
+                    <parameter idref="frequencies"/>
+                </dirichletPrior>
+                <logNormalPrior mean="0.0013" stdev="2.0E-4" offset="0.0">
+                    <parameter idref="ucld.mean"/>
+                </logNormalPrior>
+                <exponentialPrior mean="0.3333333333333333" offset="0.0">
+                    <parameter idref="ucld.stdev"/>
+                </exponentialPrior>
+                <oneOnXPrior>
+                    <parameter idref="exponential.popSize"/>
+                </oneOnXPrior>
+                <laplacePrior mean="0.0" scale="1.0">
+                    <parameter idref="exponential.growthRate"/>
+                </laplacePrior>
+                <coalescentLikelihood idref="coalescent"/>
+
+
+                <discretizedBranchRates idref="branchRates"/>
+            </prior>
+            <likelihood id="likelihood">
+                <treeDataLikelihood idref="treeLikelihood"/>
+            </likelihood>
+        </joint>
+        <operators idref="operators"/>
+
+        <!-- write log to screen                                                     -->
+        <log id="screenLog" logEvery="10000">
+            <column label="Joint" dp="4" width="12">
+                <joint idref="joint"/>
+            </column>
+            <column label="Prior" dp="4" width="12">
+                <prior idref="prior"/>
+            </column>
+            <column label="Likelihood" dp="4" width="12">
+                <likelihood idref="likelihood"/>
+            </column>
+            <column label="age(root)" sf="6" width="12">
+                <tmrcaStatistic idref="age(root)"/>
+            </column>
+            <column label="ucld.mean" sf="6" width="12">
+                <parameter idref="ucld.mean"/>
+            </column>
+        </log>
+
+        <!-- write log to file                                                       -->
+        <log id="fileLog" logEvery="10000" fileName="2021-03-25_relaxed_exponential.xml.log" overwrite="false">
+            <joint idref="joint"/>
+            <prior idref="prior"/>
+            <likelihood idref="likelihood"/>
+            <parameter idref="treeModel.rootHeight"/>
+            <tmrcaStatistic idref="age(root)"/>
+            <treeLengthStatistic idref="treeLength"/>
+            <parameter idref="exponential.popSize"/>
+            <parameter idref="exponential.growthRate"/>
+            <parameter idref="kappa"/>
+            <parameter idref="frequencies"/>
+            <parameter idref="ucld.mean"/>
+            <parameter idref="ucld.stdev"/>
+            <rateStatistic idref="meanRate"/>
+            <rateStatistic idref="coefficientOfVariation"/>
+            <rateCovarianceStatistic idref="covariance"/>
+            <treeDataLikelihood idref="treeLikelihood"/>
+            <discretizedBranchRates idref="branchRates"/>
+            <coalescentLikelihood idref="coalescent"/>
+
+        </log>
+
+        <!-- write tree log to file                                                  -->
+        <logTree id="treeFileLog" logEvery="10000" nexusFormat="true"
+                 fileName="2021-03-25_relaxed_exponential.xml.trees"
+                 sortTranslationTable="true">
+            <treeModel idref="treeModel"/>
+            <trait name="rate" tag="rate">
+                <discretizedBranchRates idref="branchRates"/>
+            </trait>
+            <joint idref="joint"/>
+        </logTree>
+    </mcmc>
+
+    <report>
+        <property name="timer">
+            <mcmc idref="mcmc"/>
+        </property>
+    </report>
+</beast>
