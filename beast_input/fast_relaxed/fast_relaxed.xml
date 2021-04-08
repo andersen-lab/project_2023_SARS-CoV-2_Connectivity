@@ -38,23 +38,54 @@
     </coalescentLikelihood>
 
 
-    <!-- The uncorrelated relaxed clock (Drummond, Ho, Phillips & Rambaut (2006) PLoS Biology 4, e88 )-->
-    <discretizedBranchRates id="branchRates">
+<!--    &lt;!&ndash; The uncorrelated relaxed clock (Drummond, Ho, Phillips & Rambaut (2006) PLoS Biology 4, e88 )&ndash;&gt;-->
+<!--    <discretizedBranchRates id="branchRates">-->
+<!--        <treeModel idref="treeModel"/>-->
+<!--        <distribution>-->
+<!--            <logNormalDistributionModel meanInRealSpace="true">-->
+<!--                <mean>-->
+<!--                    <parameter id="ucld.mean" value="0.0013" lower="0.0"/>-->
+<!--                </mean>-->
+<!--                <stdev>-->
+<!--                    <parameter id="ucld.stdev" value="1.0E-4" lower="0.0"/>-->
+<!--                </stdev>-->
+<!--            </logNormalDistributionModel>-->
+<!--        </distribution>-->
+<!--        <rateCategories>-->
+<!--            <parameter id="branchRates.categories"/>-->
+<!--        </rateCategories>-->
+<!--    </discretizedBranchRates>-->
+
+    <!-- The arbitraryBranchRates )-->
+    <arbitraryBranchRates id="branchRates" centerAtOne="false">
         <treeModel idref="treeModel"/>
+        <rates>
+            <parameter id="branchRates.rates" value="1E0" lower="0"/>
+        </rates>
+        <scale>
+            <parameter id="ucld.stdev" lower="0.0" value="1.0"/>
+        </scale>
+        <location>
+            <parameter id="ucld.mean" lower="0.0" value="1E-3"/>
+        </location>
+    </arbitraryBranchRates>
+
+    <!-- Don't change the mean and stdev here, as they refer to the residuals of the branch rates rather than the rates themselves -->
+    <distributionLikelihood id="ratesPrior">
+        <data>
+            <parameter idref="branchRates.rates"/>
+        </data>
         <distribution>
             <logNormalDistributionModel meanInRealSpace="true">
                 <mean>
-                    <parameter id="ucld.mean" value="0.0013" lower="0.0"/>
+                    <parameter value="1.0" lower="0.0"/>
                 </mean>
                 <stdev>
-                    <parameter id="ucld.stdev" value="1.0E-4" lower="0.0"/>
+                    <parameter value="1.0" lower="0.0"/>
                 </stdev>
             </logNormalDistributionModel>
         </distribution>
-        <rateCategories>
-            <parameter id="branchRates.categories"/>
-        </rateCategories>
-    </discretizedBranchRates>
+    </distributionLikelihood>
 
     <rateStatistic id="meanRate" name="meanRate" mode="mean" internal="true" external="true">
         <treeModel idref="treeModel"/>
@@ -102,7 +133,7 @@
 
 
     <!-- Likelihood for tree given sequence data                                 -->
-    <treeDataLikelihood id="treeLikelihood" useAmbiguities="false">
+    <treeDataLikelihood id="treeLikelihood" useAmbiguities="false" usePreOrder="true">
         <partition>
             <patterns idref="patterns"/>
             <siteModel idref="siteModel"/>
@@ -134,12 +165,29 @@
                 <parameter idref="ucld.mean"/>
             </down>
         </upDownOperator>
-        <swapOperator size="1" weight="10" autoOptimize="false">
-            <parameter idref="branchRates.categories"/>
-        </swapOperator>
-        <uniformIntegerOperator weight="10">
-            <parameter idref="branchRates.categories"/>
-        </uniformIntegerOperator>
+<!--        <swapOperator size="1" weight="10" autoOptimize="false">-->
+<!--            <parameter idref="branchRates.categories"/>-->
+<!--        </swapOperator>-->
+<!--        <uniformIntegerOperator weight="10">-->
+<!--            <parameter idref="branchRates.categories"/>-->
+<!--        </uniformIntegerOperator>-->
+        <hamiltonianMonteCarloOperator weight="0.1" nSteps="10" stepSize="1E-2" mode="vanilla"
+                                       drawVariance="1.0" autoOptimize="true"
+                                       preconditioning="diagonal" preconditioningDelay="0" preconditioningUpdateFrequency="10">
+            <jointGradient>
+                <hessian>
+                    <distributionLikelihood idref="ratesPrior"/>
+                    <parameter idref="branchRates.rates"/>
+                </hessian>
+                <branchRateGradient id="branchRateGradient" traitName="Sequence">
+                    <treeDataLikelihood idref="treeLikelihood"/>
+                </branchRateGradient>
+            </jointGradient>
+            <parameter idref="branchRates.rates"/>
+            <signTransform>
+                <parameter idref ="branchRates.rates"/>
+            </signTransform>
+        </hamiltonianMonteCarloOperator>
         <subtreeSlide size="1.0" gaussian="true" weight="30">
             <treeModel idref="treeModel"/>
         </subtreeSlide>
