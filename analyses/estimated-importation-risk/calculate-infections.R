@@ -176,14 +176,16 @@ format_epi_data <- function(entry) {
     ungroup() %>%
     select(-c(confirmed, dead)) %>%
     rename(deaths = dead_numIncrease, cases = confirmed_numIncrease, location=name) %>%
-    replace_na(list(deaths = 0, cases = 0)) %>%
-    filter(date < "2021-10-30")
+    replace_na(list(deaths = 0, cases = 0))
 }
 
 download_deaths <- function() {
   fields <- c("name", "date", "dead", "confirmed", "population")
 
-  countries <- getAdmn0( fields=fields ) %>%
+  country_names <- getAdmn0(fields=c("name"), date="2021-01-01" ) %>%
+    pull( name )
+  countries <- lapply( country_names, getEpiData, admin_level=0, fields=fields ) %>%
+    bind_rows() %>%
     select(name, date, dead, confirmed, population) %>%
     filter(!name %in% c("United States of America", "Georgia", "Mexico")) %>%
     mutate(name = recode(name,

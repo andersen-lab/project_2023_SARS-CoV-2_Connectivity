@@ -4,6 +4,9 @@ from datetime import datetime as dt
 from datetime import timedelta
 import time
 
+def get_okabe_ito_palette():
+    return ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"]
+
 def setup_plotting_standards():
     prop = mpl.font_manager.FontProperties('Roboto')
     mpl.rcParams['font.sans-serif'] = prop.get_name()
@@ -38,8 +41,8 @@ def basic_formatting( ax, spines=["bottom"], which="y", title=None, ylabel=None,
     [ax.spines[j].set_visible( False ) for j in ax.spines if j not in spines]
 
     # Format axes ticks
-    ax.tick_params( axis="x", bottom=False, which="both", rotation=90, labelbottom=True, labelsize=xsize )
-    ax.tick_params( axis="y", left=False, which="both", labelleft=True, labelsize=ysize )
+    ax.tick_params( axis="x", bottom=False, which="both", rotation=90, labelbottom=True, labelsize=xsize, pad=0 )
+    ax.tick_params( axis="y", left=False, which="both", labelleft=True, labelsize=ysize, pad=0 )
 
     # Label axes
     ax.set_xlabel( xlabel, fontsize=xsize )
@@ -127,3 +130,4 @@ def hpd(data, level):
     assert 0 <= i <= i+nIn-1 < len(d)
  
     return (d[i], d[i+nIn-1])
+
