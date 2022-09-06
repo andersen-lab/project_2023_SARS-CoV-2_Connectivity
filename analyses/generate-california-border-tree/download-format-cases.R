@@ -3,6 +3,8 @@ library( tidyverse )
 library( lubridate )
 library( reshape2 )
 
+fields <- c("name", "date", "confirmed_numIncrease")
+
 country_names <- getAdmn0(fields=c("name"), date="2021-01-01" ) %>%
   pull( name )
 countries <- lapply( country_names, getEpiData, admin_level=0, fields=fields ) %>%
