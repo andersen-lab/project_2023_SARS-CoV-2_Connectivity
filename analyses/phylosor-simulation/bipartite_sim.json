@@ -1,0 +1,47 @@
+{
+    "ContactNetwork": "NetworkX",
+    "ContactNetworkGenerator": "NateBipartite",
+    "Driver": "Default",
+    "EndCriteria": "GEMF",
+    "Logging": "FileSTDOUT",
+    "NodeAvailability": "Perfect",
+    "NodeEvolution": "VirusTreeSimulator",
+    "NumBranchSample": "Single",
+    "NumTimeSample": "Once",
+    "PostValidation": "Dummy",
+    "SeedSelection": "Random",
+    "SeedSequence": "NoSeqs",
+    "SequenceEvolution": "NoSeqs",
+    "Sequencing": "NoSeqs",
+    "SourceSample": "Random",
+    "TimeSample": "Uniform",
+    "TransmissionNodeSample": "GEMF",
+    "TransmissionTimeSample": "SIRGEMF",
+    "TreeNode": "Simple",
+    "TreeUnit": "ConstantRate",
+    "end_time": 1,
+    "gemf_path": "GEMF",
+    "grinder_path": "grinder",
+    "hmmemit_path": "hmmemit",
+    "java_path": "java",
+    "num_seeds": 1,
+    "nw_rename_path": "nw_rename",
+
+    "sir_beta_seed": 0,
+    "sir_beta_by_i": 2.7,
+    "sir_delta": 365/20,
+
+    "vts_growthRate": 2.8,
+    "vts_max_attempts": 100,
+    "vts_model": "constant",
+    "vts_n0": 1,
+    "vts_t50": -2,
+
+    "tree_mutation_rate": 0.00086370,
+
+    # NateTripartite
+    "comm_sizes": [5000, 5000],
+    "comm_m": [8, 8],
+    "prob_ab": 0.25,
+    # Alternative values used: 0.001, 0.01, 0.1, 0.125, 0.25, 0.5
+}
