@@ -1,1 +1,6 @@
-# California project
+# Genomic surveillance reveals highly connected COVID-19 epidemics
+**Nathaniel L. Matteson** <sup>1</sup>
+<sup>1</sup> *Department of Immunology and Microbiology, Scripps Research, La Jolla, United States* <br/>
+
+## Abstract
+The maturation of genomic surveillance in the past decade has enabled us to track the emergence and spread of epidemics at a level which traditional contact-tracing based methods cannot. Surveillance during the COVID-19 pandemic has identified variability in the frequency of importation events and the amount of transmission lineage persistence, indicating that local epidemics are variably isolated. While previous studies have identified connectivity between well-sampled and highly connected locations during the emergence and expansion of SARS-CoV-2, it is unclear if these findings are applicable to all phases of the pandemics. Here we show that local COVID-19 epidemics are intimately connected. Using genomic, mobility, and epidemiological data from North America, we find abundant transmission occurring between both adjacent and distant locations including across an international border. Furthermore, we find that this connectivity has a significant effect on cases at the local level, wherein independent introductions are the dominant source of transmission lineages during some periods of the pandemic. Our findings demonstrate a complex meaning of ‘local’ when investigating highly-connected epidemics ​​and emphasize the importance of collaborative interventions where such situations are expected.
