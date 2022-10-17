@@ -1,5 +1,5 @@
 # Genomic surveillance reveals highly connected COVID-19 epidemics
-**Nathaniel L. Matteson** <sup>1</sup>
+**Nathaniel L. Matteson** <sup>1</sup><br/>
 <sup>1</sup> *Department of Immunology and Microbiology, Scripps Research, La Jolla, United States* <br/>
 
 ## Abstract
