@@ -18426,10 +18426,10 @@
 
 		<!-- rates and indicators                                                    -->
 		<rates>
-			<parameter id="Location.rates" dimension="55" value="1.0" lower="0.0"/>
+			<parameter id="Location.rates" dimension="110" value="1.0" lower="0.0"/>
 		</rates>
 		<rateIndicator>
-			<parameter id="Location.indicators" dimension="55" value="1.0"/>
+			<parameter id="Location.indicators" dimension="110" value="1.0"/>
 		</rateIndicator>
 	</generalSubstitutionModel>
 	<sumStatistic id="Location.nonZeroRates" elementwise="true">
