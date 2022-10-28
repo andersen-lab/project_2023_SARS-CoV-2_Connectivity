@@ -32,6 +32,23 @@ def timeseries_formatting( ax ):
     ax.xaxis.set_minor_formatter( mdates.DateFormatter( '%b' ) )
     ax.xaxis.set_major_locator( mdates.YearLocator() )
     ax.xaxis.set_major_formatter( mdates.DateFormatter( '%Y %b' ) )
+
+def skipped_timeseries_formatting( ax ):
+    ax.xaxis.set_major_locator( mdates.MonthLocator() )
+    formatter = mdates.DateFormatter( '%b' )
+    long_formatter = mdates.DateFormatter( '%Y %b' )
+    accepted_months = ["Jan", "Mar", "May", "Jul", "Sep", "Nov"]
+    labels = []
+    for date in ax.get_xticks():
+        formatted_date = formatter.format_data( date )
+        if formatted_date in accepted_months:
+            if formatted_date == "Jan":
+                labels.append( long_formatter.format_data(date) )
+            else:
+                labels.append( formatted_date )
+        else:
+            labels.append( "" )
+    ax.set_xticklabels( labels )
         
 def basic_formatting( ax, spines=["bottom"], which="y", title=None, ylabel=None, xlabel=None, xsize=12, ysize=12, xlims=None, ylims=None ):
     """
