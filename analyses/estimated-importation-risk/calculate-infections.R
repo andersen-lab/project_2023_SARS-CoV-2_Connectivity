@@ -225,8 +225,7 @@ download_deaths <- function() {
     arrange( date ) %>%
     select( date, `Baja California` ) %>%
     rename( deaths = `Baja California` ) %>%
-    mutate( population = 3634868, cases=0, location="Mexico" ) %>%
-    filter(date < "2021-10-30")
+    mutate( population = 3634868, cases=0, location="Mexico" )
 
   return_df <- bind_rows( countries, usstates, cacounties, mx )
   return_df$deaths[return_df$deaths < 0] <- 0

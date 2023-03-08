@@ -66,6 +66,8 @@ def basic_formatting( ax, spines=["bottom"], which="y", title=None, ylabel=None,
     ax.set_ylabel( ylabel, fontsize=ysize )
     ax.set_title( title )
 
+    ax.set_facecolor( "w" )
+
     # Add a simple grid
     ax.grid( which="both", axis=which, linewidth=1, color="#F1F1F1", zorder=1 )
 
