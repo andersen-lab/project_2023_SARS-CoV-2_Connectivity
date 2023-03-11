@@ -1,6 +1,4 @@
 # Genomic surveillance reveals dynamic shifts in the connectivity of COVID-19 epidemics
-**Nathaniel L. Matteson** <sup>1</sup><br/>
-<sup>1</sup> *Department of Immunology and Microbiology, Scripps Research, La Jolla, United States* <br/>
 
 ## Abstract
 The maturation of genomic surveillance in the past decade has enabled tracking of the emergence and spread of epidemics at an unprecedented level. During the COVID-19 pandemic, for example, genomic data revealed that local epidemics varied considerably in the frequency of SARS-CoV-2 lineage importation and persistence, likely due to a combination of COVID-19 restrictions and changing connectivity. Here, we show that local COVID-19 epidemics are driven by regional transmission, including across international boundaries, but can become increasingly connected to distant locations following the relaxation of public health interventions. By integrating genomic, mobility, and epidemiological data, we find abundant transmission occurring between both adjacent and distant locations, supported by dynamic mobility patterns. We find that changing connectivity significantly influences local COVID-19 incidence. Our findings demonstrate a complex meaning of ‘local’ when investigating connected epidemics and emphasize the importance of collaborative interventions for pandemic prevention and mitigation.
