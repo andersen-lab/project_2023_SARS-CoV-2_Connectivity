@@ -31,12 +31,12 @@ def timeseries_formatting( ax ):
     ax.xaxis.set_minor_locator( mdates.MonthLocator() )
     ax.xaxis.set_minor_formatter( mdates.DateFormatter( '%b' ) )
     ax.xaxis.set_major_locator( mdates.YearLocator() )
-    ax.xaxis.set_major_formatter( mdates.DateFormatter( '%Y %b' ) )
+    ax.xaxis.set_major_formatter( mdates.DateFormatter( '%b\n%Y' ) )
 
 def skipped_timeseries_formatting( ax ):
     ax.xaxis.set_major_locator( mdates.MonthLocator() )
     formatter = mdates.DateFormatter( '%b' )
-    long_formatter = mdates.DateFormatter( '%Y %b' )
+    long_formatter = mdates.DateFormatter( '%b\n%Y' )
     accepted_months = ["Jan", "Mar", "May", "Jul", "Sep", "Nov"]
     labels = []
     for date in ax.get_xticks():
@@ -58,7 +58,7 @@ def basic_formatting( ax, spines=["bottom"], which="y", title=None, ylabel=None,
     [ax.spines[j].set_visible( False ) for j in ax.spines if j not in spines]
 
     # Format axes ticks
-    ax.tick_params( axis="x", bottom=False, which="both", rotation=90, labelbottom=True, labelsize=xsize, pad=0 )
+    ax.tick_params( axis="x", bottom=False, which="both", labelbottom=True, labelsize=xsize, pad=0 )
     ax.tick_params( axis="y", left=False, which="both", labelleft=True, labelsize=ysize, pad=0 )
 
     # Label axes
